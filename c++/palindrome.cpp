@@ -1,10 +1,3 @@
-// Leet-Code Problem: 
-// https://leetcode.com/problems/palindrome-linked-list/
-
-// Given the head of a singly linked list, return true if it is a  palindrome or false otherwise.
-
-// Solution: 
-
 #include <iostream>
 
 struct ListNode {
@@ -20,37 +13,31 @@ public:
             return true; // An empty list or a list with one node is a palindrome.
         }
 
-        // Helper function to reverse a linked list
-        ListNode* reverseList(ListNode* node) {
-            ListNode* prev = nullptr;
-            while (node) {
-                ListNode* temp = node->next;
-                node->next = prev;
-                prev = node;
-                node = temp;
-            }
-            return prev;
-        }
-
+        // Find the middle of the linked list using slow and fast pointers
         ListNode* slow = head;
         ListNode* fast = head;
-
-        // Find the middle of the linked list using slow and fast pointers
         while (fast && fast->next) {
             slow = slow->next;
             fast = fast->next->next;
         }
 
-        // Reverse the second half of the linked list
-        ListNode* reversedHead = reverseList(slow);
+        // Reverse the second half of the linked list in-place
+        ListNode* prev = nullptr;
+        ListNode* curr = slow;
+        while (curr) {
+            ListNode* nextNode = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = nextNode;
+        }
 
         // Compare the first half and the reversed second half of the linked list
-        while (reversedHead) {
-            if (head->val != reversedHead->val) {
+        while (prev) {
+            if (head->val != prev->val) {
                 return false;
             }
             head = head->next;
-            reversedHead = reversedHead->next;
+            prev = prev->next;
         }
 
         return true;
